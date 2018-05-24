@@ -15,12 +15,14 @@ class MainActivity : AppCompatActivity(), JokeView {
     }
 
     private lateinit var smileDetector: SmileDetector
+    private lateinit var jokeRepository: JokeRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         smileDetector = SmileDetector(this)
+        jokeRepository = JokeRepository(this)
 
         button.setOnClickListener {
             Intent(MediaStore.ACTION_IMAGE_CAPTURE).let {
@@ -42,18 +44,18 @@ class MainActivity : AppCompatActivity(), JokeView {
     }
 
     override fun displaySmile() {
-        textView.text = "Smile"
+        textView.text = getString(R.string.see_you_next_time)
     }
 
     override fun displaySad() {
-        textView.text = "Sad"
+        jokeRepository.giveMeAJoke()
     }
 
     override fun displayFail() {
-        textView.text = "FAIL"
+        textView.text = getString(R.string.fail)
     }
 
-    override fun displayNoFace() {
-        textView.text = "Do you have a face? Oo"
+    override fun displayJoke(joke: String) {
+        textView.text = joke
     }
 }

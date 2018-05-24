@@ -30,7 +30,7 @@ class SmileDetector(private val view: JokeView) {
                             view.displaySad()
                         }
                     } catch (e: NoSuchElementException) {
-                        view.displayNoFace()
+                        view.displayFail()
                     }
                 }
                 .addOnFailureListener {

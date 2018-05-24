@@ -4,5 +4,5 @@ interface JokeView {
     fun displaySmile()
     fun displaySad()
     fun displayFail()
-    fun displayNoFace()
+    fun displayJoke(joke: String)
 }
