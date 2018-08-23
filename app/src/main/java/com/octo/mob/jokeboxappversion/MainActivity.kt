@@ -50,7 +50,6 @@ class MainActivity : AppCompatActivity(), JokeView {
         imageView.setOnClickListener {
             with(Intent(MediaStore.ACTION_IMAGE_CAPTURE)) {
                 if (resolveActivity(packageManager) != null) {
-                    createImageFile()
                     putExtra(MediaStore.EXTRA_OUTPUT, createPhotoUri())
                     startActivityForResult(this, REQUEST_IMAGE_CAPTURE)
                 }
