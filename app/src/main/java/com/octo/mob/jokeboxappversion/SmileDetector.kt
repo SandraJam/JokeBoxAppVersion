@@ -24,7 +24,7 @@ class SmileDetector(private val view: JokeView) {
         detector.detectInImage(firebaseVisionImage)
                 .addOnSuccessListener { faces ->
                     try {
-                        if (faces.first().smilingProbability > 0.70) {
+                        if (faces.first().smilingProbability > 0.30) {
                             view.displaySmile()
                         } else {
                             view.displaySad()

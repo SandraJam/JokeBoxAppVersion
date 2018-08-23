@@ -6,12 +6,17 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
+import android.widget.ImageView
+import com.octo.mob.jokeboxappversion.repository.ApiJokeRepository
+import com.octo.mob.jokeboxappversion.repository.JokeRepository
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), JokeView {
 
     companion object {
         private const val REQUEST_IMAGE_CAPTURE = 1
+        private const val DATA_CHILD = 0
+        private const val LOAD_CHILD = 1
     }
 
     private lateinit var smileDetector: SmileDetector
@@ -22,9 +27,11 @@ class MainActivity : AppCompatActivity(), JokeView {
         setContentView(R.layout.activity_main)
 
         smileDetector = SmileDetector(this)
-        jokeRepository = JokeRepository(this)
+        jokeRepository = ApiJokeRepository().apply {
+            view = this@MainActivity
+        }
 
-        button.setOnClickListener {
+        imageView.setOnClickListener {
             Intent(MediaStore.ACTION_IMAGE_CAPTURE).let {
                 if (it.resolveActivity(packageManager) != null) {
                     startActivityForResult(it, REQUEST_IMAGE_CAPTURE)
@@ -35,16 +42,20 @@ class MainActivity : AppCompatActivity(), JokeView {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            val extras = data.extras
-            val imageBitmap = extras.get("data") as Bitmap
-            imageView.setImageBitmap(imageBitmap)
-            smileDetector.recognizePicture(imageBitmap)
+            data.extras?.let {
+                val imageBitmap = it.get("data") as Bitmap
+                imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                imageView.setImageBitmap(imageBitmap)
+                mainViewFlipper.displayedChild = LOAD_CHILD
+                smileDetector.recognizePicture(imageBitmap)
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun displaySmile() {
         textView.text = getString(R.string.see_you_next_time)
+        mainViewFlipper.displayedChild = DATA_CHILD
     }
 
     override fun displaySad() {
@@ -53,9 +64,11 @@ class MainActivity : AppCompatActivity(), JokeView {
 
     override fun displayFail() {
         textView.text = getString(R.string.fail)
+        mainViewFlipper.displayedChild = DATA_CHILD
     }
 
     override fun displayJoke(joke: String) {
         textView.text = joke
+        mainViewFlipper.displayedChild = DATA_CHILD
     }
 }

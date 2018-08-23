@@ -1,12 +1,15 @@
-package com.octo.mob.jokeboxappversion
+package com.octo.mob.jokeboxappversion.repository
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.octo.mob.jokeboxappversion.JokeView
 
-class JokeRepository(private val view: JokeView) {
+class FirebaseJokeRepository: JokeRepository {
+
+    override lateinit var view: JokeView
 
     private val database: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    fun giveMeAJoke() {
+    override fun giveMeAJoke() {
         database.collection("jokes")
                 .get()
                 .addOnSuccessListener {
