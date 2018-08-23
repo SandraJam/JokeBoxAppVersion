@@ -12,8 +12,8 @@ class SmileDetector(private val view: JokeView) {
 
     init {
         val options = FirebaseVisionFaceDetectorOptions.Builder()
-                .setClassificationType(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
-                .build()
+            .setClassificationType(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
+            .build()
 
         detector = FirebaseVision.getInstance().getVisionFaceDetector(options)
     }
@@ -22,19 +22,19 @@ class SmileDetector(private val view: JokeView) {
         val firebaseVisionImage = FirebaseVisionImage.fromBitmap(bitmap)
 
         detector.detectInImage(firebaseVisionImage)
-                .addOnSuccessListener { faces ->
-                    try {
-                        if (faces.first().smilingProbability > 0.30) {
-                            view.displaySmile()
-                        } else {
-                            view.displaySad()
-                        }
-                    } catch (e: NoSuchElementException) {
-                        view.displayFail()
+            .addOnSuccessListener { faces ->
+                try {
+                    if (faces.first().smilingProbability > 0.30) {
+                        view.displaySmile()
+                    } else {
+                        view.displaySad()
                     }
-                }
-                .addOnFailureListener {
+                } catch (e: NoSuchElementException) {
                     view.displayFail()
                 }
+            }
+            .addOnFailureListener {
+                view.displayFail()
+            }
     }
 }

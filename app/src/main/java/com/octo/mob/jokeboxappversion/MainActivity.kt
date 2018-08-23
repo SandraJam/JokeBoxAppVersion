@@ -4,7 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -14,6 +16,11 @@ import com.octo.mob.jokeboxappversion.repository.JokeRepository
 import kotlinx.android.synthetic.main.activity_main.*
 import nl.dionsegijn.konfetti.models.Shape
 import nl.dionsegijn.konfetti.models.Size
+import android.support.v4.content.FileProvider
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import android.graphics.BitmapFactory
 
 class MainActivity : AppCompatActivity(), JokeView {
 
@@ -21,10 +28,15 @@ class MainActivity : AppCompatActivity(), JokeView {
         private const val REQUEST_IMAGE_CAPTURE = 1
         private const val DATA_CHILD = 0
         private const val LOAD_CHILD = 1
+        private const val FILE_PROVIDER_AUTHORITY = "com.octo.mob.jokeboxappversion.fileprovider"
+        private const val DATE_FORMAT_PATTERN = "yyyyMMdd_HHmmss"
+        private const val JPEG_PREFIX = "JPEG_"
+        private const val JPG_EXTENSION = ".jpg"
     }
 
     private lateinit var smileDetector: SmileDetector
     private lateinit var jokeRepository: JokeRepository
+    private var currentPhotoPath: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,25 +48,50 @@ class MainActivity : AppCompatActivity(), JokeView {
         }
 
         imageView.setOnClickListener {
-            Intent(MediaStore.ACTION_IMAGE_CAPTURE).let {
-                if (it.resolveActivity(packageManager) != null) {
-                    startActivityForResult(it, REQUEST_IMAGE_CAPTURE)
+            with(Intent(MediaStore.ACTION_IMAGE_CAPTURE)) {
+                if (resolveActivity(packageManager) != null) {
+                    createImageFile()
+                    putExtra(MediaStore.EXTRA_OUTPUT, createPhotoUri())
+                    startActivityForResult(this, REQUEST_IMAGE_CAPTURE)
                 }
             }
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            data.extras?.let {
-                val imageBitmap = it.get("data") as Bitmap
+            with(getPicture()) {
                 imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-                imageView.setImageBitmap(imageBitmap)
+                imageView.setImageBitmap(this)
                 mainViewFlipper.displayedChild = LOAD_CHILD
-                smileDetector.recognizePicture(imageBitmap)
+                smileDetector.recognizePicture(this)
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun createPhotoUri(): Uri = FileProvider.getUriForFile(
+        this,
+        FILE_PROVIDER_AUTHORITY,
+        createImageFile()
+    )
+
+    private fun createImageFile(): File {
+        val timeStamp = SimpleDateFormat(DATE_FORMAT_PATTERN, Locale.FRANCE).format(Date())
+        val imageFileName = "$JPEG_PREFIX$timeStamp"
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val image = File.createTempFile(imageFileName, JPG_EXTENSION, storageDir)
+        currentPhotoPath = image.absolutePath
+        return image
+    }
+
+    private fun getPicture(): Bitmap {
+        val bmOptions = BitmapFactory.Options().apply {
+            inJustDecodeBounds = true
+            BitmapFactory.decodeFile(currentPhotoPath, this)
+            inJustDecodeBounds = false
+        }
+        return BitmapFactory.decodeFile(currentPhotoPath, bmOptions)
     }
 
     override fun displaySmile() {
