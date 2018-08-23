@@ -3,7 +3,6 @@ package com.octo.mob.jokeboxappversion
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -13,14 +12,14 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.ImageView
 import com.octo.mob.jokeboxappversion.repository.ApiJokeRepository
 import com.octo.mob.jokeboxappversion.repository.JokeRepository
-import kotlinx.android.synthetic.main.activity_main.*
-import nl.dionsegijn.konfetti.models.Shape
-import nl.dionsegijn.konfetti.models.Size
 import android.support.v4.content.FileProvider
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import android.graphics.BitmapFactory
+import kotlinx.android.synthetic.main.activity_main.*
+import nl.dionsegijn.konfetti.models.Shape
+import nl.dionsegijn.konfetti.models.Size
 
 class MainActivity : AppCompatActivity(), JokeView {
 
@@ -94,22 +93,24 @@ class MainActivity : AppCompatActivity(), JokeView {
     }
 
     override fun displaySmile() {
-        val color = listOf(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent).map {
+        val color = listOf(R.color.colorPrimary, R.color.colorPrimaryDark,
+            R.color.colorAccent).map {
             ContextCompat.getColor(applicationContext, it)
         }
 
         textView.text = getString(R.string.see_you_next_time)
         mainViewFlipper.displayedChild = DATA_CHILD
         konfettiView.build()
-                .addColors(color)
-                .setDirection(0.0, 359.0)
-                .setFadeOutEnabled(true)
-                .addShapes(Shape.CIRCLE)
-                .setSpeed(1f, 8f)
-                .setTimeToLive(4000L)
-                .addSizes(Size(12), Size(16, 6f))
-                .setPosition(konfettiView.x + konfettiView.width / 2, konfettiView.y + konfettiView.height / 3)
-                .burst(100)
+            .addColors(color)
+            .setDirection(0.0, 359.0)
+            .setFadeOutEnabled(true)
+            .addShapes(Shape.CIRCLE)
+            .setSpeed(1f, 8f)
+            .setTimeToLive(4000L)
+            .addSizes(Size(12), Size(16, 6f))
+            .setPosition(konfettiView.x + konfettiView.width / 2,
+                konfettiView.y + konfettiView.height / 3)
+            .burst(100)
     }
 
     override fun displaySad() {
