@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), JokeView {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             with(getPicture()) {
                 imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-                imageView.setImageBitmap(this)
+                imageView.setImageBitmap(Bitmap.createBitmap(this, 0, height/4, width, width))
                 mainViewFlipper.displayedChild = LOAD_CHILD
                 smileDetector.recognizePicture(this)
             }
