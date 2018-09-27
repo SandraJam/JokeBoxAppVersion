@@ -1,6 +1,6 @@
 package com.octo.mob.jokeboxappversion.repository
 
-import com.octo.mob.jokeboxappversion.JokeView
+import com.octo.mob.jokeboxappversion.view.JokeView
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch

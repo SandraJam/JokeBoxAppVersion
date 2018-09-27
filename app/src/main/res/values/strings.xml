@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Joke Box App Version</string>
+    <string name="app_name">Joke Box</string>
     <string name="see_you_next_time">Ah, you look happy! See you next time :)</string>
     <string name="fail">Joke box failed :(</string>
 </resources>

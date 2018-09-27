@@ -1,10 +1,12 @@
 package com.octo.mob.jokeboxappversion
 
 import android.graphics.Bitmap
+import com.google.firebase.FirebaseApp
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions
+import com.octo.mob.jokeboxappversion.view.JokeView
 
 class SmileDetector(private val view: JokeView) {
 

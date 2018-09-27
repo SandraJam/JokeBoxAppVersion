@@ -1,10 +1,10 @@
-package com.octo.mob.jokeboxappversion
+package com.octo.mob.jokeboxappversion.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.ImageView
+import com.camerakit.CameraKitView
 
-class SquareImageView(context: Context, attrs: AttributeSet) : ImageView(context, attrs) {
+class SquareCameraKit(context: Context, attrs: AttributeSet) : CameraKitView(context, attrs) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)

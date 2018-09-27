@@ -1,4 +1,4 @@
-package com.octo.mob.jokeboxappversion
+package com.octo.mob.jokeboxappversion.view
 
 interface JokeView {
     fun displaySmile()
